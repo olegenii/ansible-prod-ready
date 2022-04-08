@@ -6,5 +6,5 @@
     - name: Update apt cache and install Nginx
       apt:
         name: nginx
-        state: latest
+        state: 1.18.0
         update_cache: yes
