@@ -1,0 +1,7 @@
+webserver:
+  hosts:
+%{ for vps in vps_list ~}
+    ${vps.name}.${domain}:
+      ansible_host: ${vps.ipv4_address}
+      ansible_user: root
+%{ endfor ~}
