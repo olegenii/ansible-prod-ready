@@ -5,6 +5,6 @@
   tasks:
     - name: Update apt cache and install Nginx
       apt:
-        name: nginx
-        state: 1.18.0
+        name: nginx=1.18.0
+        state: present
         update_cache: yes
