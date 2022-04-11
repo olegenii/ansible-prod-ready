@@ -3,7 +3,7 @@
   vars:
     server_name: "{{ inventory_hostname }}"
     document_root: /var/www
-    port: 80
+    port_num: 80
     virtualhosts:
       1:
         name: "site1.com"
