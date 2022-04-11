@@ -7,10 +7,10 @@
     virtualhosts:
       1:
         name: "site1.com"
-        config: "site1.com.j2"
+        # config: "site1.com.j2"
       2:
         name: "site2.com"
-        config: "site2.com.j2"
+        # config: "site2.com.j2"
   tasks:
     - name: Update apt cache and install Nginx
       apt:
@@ -25,7 +25,7 @@
 
     - name: Copy virtualhosts conf to server
       ansible.builtin.template:
-        src: "files/{{ item.value.config}}"
+        src: "files/site.conf.j2"
         dest: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
       loop: "{{ lookup('dict', virtualhosts) }}"
 
