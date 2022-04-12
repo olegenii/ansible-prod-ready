@@ -4,6 +4,8 @@
     server_name: "{{ inventory_hostname }}"
     document_root: /var/www
     port_num: 80
+    worker_processes: auto
+    worker_connections: 2048
     virtualhosts:
       1:
         name: "site1.com"
