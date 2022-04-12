@@ -1,0 +1,14 @@
+server {
+  listen {{ port_num }};
+  server_name {{ item.value.name }} www.{{ item.value.name }};
+  root /var/www/{{ item.value.name }}/html;
+  index index.html index.htm;
+
+  access_log /var/log/nginx/{{ item.value.name }}_access.log;
+  error_log /var/log/nginx/{{ item.value.name }}_error.log;
+
+  location / {
+    default_type "text/html";
+    try_files $uri.html $uri $uri/ =404;
+  }
+}

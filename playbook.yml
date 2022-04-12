@@ -1,66 +1,15 @@
 - hosts: all
   become: yes
+  
   vars:
-    server_name: "{{ inventory_hostname }}"
-    document_root: /var/www
-    port_num: 80
+    # List of virtualhosts
     virtualhosts:
       1:
         name: "site1.com"
       2:
         name: "site2.com"
-  tasks:
-    - name: Update apt cache and install Nginx
-      apt:
-        name: nginx=1.18.0-0ubuntu1.2
-        state: present
-        update_cache: yes
-    
-    - name: Copy nginx.conf.j2 to server
-      ansible.builtin.template:
-        src: files/nginx.conf.j2
-        dest: /etc/nginx/nginx.conf
+      3:
+        name: "site3.com"
   
-    - name: Copy sites.conf.j2 to server
-      ansible.builtin.template:
-        src: files/sites.conf.j2
-        dest: /etc/nginx/sites-available/sites.conf
-
-    # - name: Copy virtualhosts conf to server
-    #   ansible.builtin.template:
-    #     src: "files/site.conf.j2"
-    #     dest: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
-    #   loop: "{{ lookup('dict', virtualhosts) }}"
-
-    - name: Create a directory if it does not exist
-      ansible.builtin.file:
-        path: "{{ document_root }}/{{ item.value.name }}/html"
-        state: directory
-      loop: "{{ lookup('dict', virtualhosts) }}"
-
-    - name: Copy index.html to virtualhosts
-      ansible.builtin.template:
-        src: files/index.html.j2
-        dest: "{{ document_root }}/{{ item.value.name }}/html/index.html"
-      loop: "{{ lookup('dict', virtualhosts) }}"
-
-    - name: Enable new sites
-      ansible.builtin.file:
-        src: "/etc/nginx/sites-available/sites.conf"
-        dest: "/etc/nginx/sites-enabled/sites.conf"
-        state: link
-      notify: Restart Nginx
-
-    # - name: Enable new sites
-    #   ansible.builtin.file:
-    #     src: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
-    #     dest: "/etc/nginx/sites-enabled/{{ item.value.name }}.conf"
-    #     state: link
-    #   notify: Restart Nginx
-    #   loop: "{{ lookup('dict', virtualhosts) }}"
-
-  handlers:
-    - name: Restart Nginx
-      service:
-        name: nginx
-        state: restarted
+  roles:
+    - nginx
