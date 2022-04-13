@@ -39,6 +39,33 @@ resource "aws_route53_record" "www" {
   records = [digitalocean_droplet.vps[count.index].ipv4_address]
 }
 
+# Create DNS record for vhost
+# resource "aws_route53_record" "vhost" {
+#   zone_id = data.aws_route53_zone.selected.zone_id
+#   name    = var.aws_route53_record_name
+#   type    = "A"
+#   ttl     = "300"
+#   records = [digitalocean_droplet.vps[0].ipv4_address]
+# }
+
+# resource "aws_route53_record" "www_vhost" {
+#   zone_id = data.aws_route53_zone.selected.zone_id
+#   name    = "www.${var.aws_route53_record_name}"
+#   type    = "A"
+#   ttl     = "300"
+#   records = [digitalocean_droplet.vps[0].ipv4_address]
+# }
+
+# Create DNS record for vhost and www.vhost
+resource "aws_route53_record" "vhost" {
+  for_each = toset( [var.aws_route53_record_name, "www.${var.aws_route53_record_name}"] )
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = each.key
+  type    = "A"
+  ttl     = "300"
+  records = [digitalocean_droplet.vps[0].ipv4_address]
+}
+
 # Create task_name tag
 resource "digitalocean_tag" "task_name" {
   name = var.tag_task_name
@@ -74,5 +101,5 @@ resource "digitalocean_droplet" "vps" {
 # Create an inventory using template
 resource "local_file" "vps" {
   filename = "${path.module}/${var.file_out}"
-  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, vps_list = digitalocean_droplet.vps})
+  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, vps_list = digitalocean_droplet.vps, hostname=var.aws_route53_record_name})
 }

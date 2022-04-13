@@ -1,6 +1,6 @@
-- name: Update apt cache and install Nginx
+- name: "Update apt cache and install {{ nginx_version }}"
   apt:
-    name: nginx=1.18.0-0ubuntu1.2
+    name: "{{ nginx_version }}"
     state: present
     update_cache: yes
 
@@ -13,19 +13,19 @@
   ansible.builtin.template:
     src: "templates/vhost.conf.j2"
     dest: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
-  loop: "{{ lookup('dict', virtualhosts) }}"
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
     path: "{{ document_root }}/{{ item.value.name }}/html"
     state: directory
-  loop: "{{ lookup('dict', virtualhosts) }}"
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
 
 - name: Copy index.html to virtualhosts
   ansible.builtin.template:
     src: templates/index.html.j2
     dest: "{{ document_root }}/{{ item.value.name }}/html/index.html"
-  loop: "{{ lookup('dict', virtualhosts) }}"
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
 
 - name: Enable new sites
   ansible.builtin.file:
@@ -33,4 +33,4 @@
     dest: "/etc/nginx/sites-enabled/{{ item.value.name }}.conf"
     state: link
   notify: Restart Nginx
-  loop: "{{ lookup('dict', virtualhosts) }}"
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"

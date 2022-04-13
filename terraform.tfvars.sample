@@ -20,7 +20,7 @@ aws_secret_key = "your_secret_key"
 
 # Add an AWS Route53 Zone and Record name
 aws_route53_zone = "your.zo.ne"
-aws_route53_record_name = "your_record.your.zone"
+aws_route53_record_name = "your_record"
 
 # Add file and template names
 file_out = "your_filename.txt"

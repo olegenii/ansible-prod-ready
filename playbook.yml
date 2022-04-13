@@ -1,15 +1,12 @@
-- hosts: all
+- hosts: webserver
   become: yes
   
   vars:
     # List of virtualhosts
     virtualhosts:
       1:
-        name: "site1.com"
-      2:
-        name: "site2.com"
-      3:
-        name: "site3.com"
+        name: "{{ tf_hostname }}"
   
   roles:
     - nginx
+    - letsencrypt

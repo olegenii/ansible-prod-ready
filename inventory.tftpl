@@ -5,3 +5,5 @@ webserver:
       ansible_host: ${vps.ipv4_address}
       ansible_user: root
 %{ endfor ~}
+  vars:
+    tf_hostname: ${hostname}.${domain}
