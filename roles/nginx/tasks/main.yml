@@ -1,36 +1,13 @@
-- name: "Update apt cache and install {{ nginx_version }}"
-  apt:
-    name: "{{ nginx_version }}"
-    state: present
-    update_cache: yes
+- name: "Install webserver on Ubuntu"
+  import_tasks: debian.yml
+  vars:
+    nginx_user: www-data
+    nginx_version: "nginx=1.18.0-0ubuntu1.3"
+  when: ansible_facts['os_family']|lower == "debian"
 
-- name: Copy nginx.conf.j2 to server
-  ansible.builtin.template:
-    src: templates/nginx.conf.j2
-    dest: /etc/nginx/nginx.conf
-
-- name: Copy virtualhosts conf to server
-  ansible.builtin.template:
-    src: "templates/vhost.conf.j2"
-    dest: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
-
-- name: Create a directory if it does not exist
-  ansible.builtin.file:
-    path: "{{ document_root }}/{{ item.value.name }}/html"
-    state: directory
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
-
-- name: Copy index.html to virtualhosts
-  ansible.builtin.template:
-    src: templates/index.html.j2
-    dest: "{{ document_root }}/{{ item.value.name }}/html/index.html"
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
-
-- name: Enable new sites
-  ansible.builtin.file:
-    src: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
-    dest: "/etc/nginx/sites-enabled/{{ item.value.name }}.conf"
-    state: link
-  notify: Restart Nginx
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
+- name: "Install webserver on CentOS"
+  import_tasks: redhat.yml
+  vars:
+    nginx_user: nginx
+    nginx_version: "nginx-1.20.1-9.el7.x86_64"
+  when: ansible_facts['os_family']|lower == "redhat"

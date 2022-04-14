@@ -39,24 +39,7 @@ resource "aws_route53_record" "www" {
   records = [digitalocean_droplet.vps[count.index].ipv4_address]
 }
 
-# Create DNS record for vhost
-# resource "aws_route53_record" "vhost" {
-#   zone_id = data.aws_route53_zone.selected.zone_id
-#   name    = var.aws_route53_record_name
-#   type    = "A"
-#   ttl     = "300"
-#   records = [digitalocean_droplet.vps[0].ipv4_address]
-# }
-
-# resource "aws_route53_record" "www_vhost" {
-#   zone_id = data.aws_route53_zone.selected.zone_id
-#   name    = "www.${var.aws_route53_record_name}"
-#   type    = "A"
-#   ttl     = "300"
-#   records = [digitalocean_droplet.vps[0].ipv4_address]
-# }
-
-# Create DNS record for vhost and www.vhost
+# Create DNS records for vhost and www.vhost
 resource "aws_route53_record" "vhost" {
   for_each = toset( [var.aws_route53_record_name, "www.${var.aws_route53_record_name}"] )
   zone_id = data.aws_route53_zone.selected.zone_id
@@ -91,6 +74,7 @@ data "digitalocean_ssh_key" "ubuntu_ssh_rebrain" {
 resource "digitalocean_droplet" "vps" {
   count = var.do_vps_count
   image  = "ubuntu-20-04-x64"
+  #image = "centos-7-x64"
   name = "${var.vps_name}-${count.index}"
   region = "fra1"
   size   = "s-1vcpu-1gb"

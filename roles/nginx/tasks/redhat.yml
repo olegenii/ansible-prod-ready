@@ -1,0 +1,31 @@
+- name: "Update apt cache and install epel-release and {{ nginx_version }} on CentOS"
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - epel-release
+    - "{{ nginx_version }}"
+
+- name: Copy nginx.conf.j2 to server
+  ansible.builtin.template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Copy virtualhosts conf to server
+  ansible.builtin.template:
+    src: "templates/vhost.conf.j2"
+    dest: "/etc/nginx/conf.d/{{ item.value.name }}.conf"
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ document_root }}/{{ item.value.name }}/html"
+    state: directory
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
+
+- name: Copy index.html to virtualhosts
+  ansible.builtin.template:
+    src: templates/index.html.j2
+    dest: "{{ document_root }}/{{ item.value.name }}/html/index.html"
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
