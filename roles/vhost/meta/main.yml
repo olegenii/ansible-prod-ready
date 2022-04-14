@@ -1,0 +1,7 @@
+dependencies:
+  - role: nginx
+    vars:
+      worker_connections: "800"
+      sendfile: "on"
+      tcp_nodelay: "on"
+      tcp_nopush: "on"

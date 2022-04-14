@@ -1,14 +1,3 @@
-- name: "Update apt cache and install {{ nginx_version }} on Ubuntu"
-  apt:
-    name: "{{ nginx_version }}"
-    state: present
-    update_cache: yes
-
-- name: Copy nginx.conf.j2 to server
-  ansible.builtin.template:
-    src: templates/nginx.conf.j2
-    dest: /etc/nginx/nginx.conf
-
 - name: Copy virtualhosts conf to server
   ansible.builtin.template:
     src: "templates/vhost.conf.j2"

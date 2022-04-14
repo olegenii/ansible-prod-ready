@@ -1,14 +1,17 @@
 - hosts: webserver
   become: yes
   
-  vars:
-    # List of virtualhosts
-    virtualhosts:
-      1:
-        name: "{{ tf_hostname }}"
+  # vars:
+  #   # List of virtualhosts
+  #   virtualhosts:
+  #     1:
+  #       name: "{{ tf_hostname }}"
   
   roles:
     - role: nginx
       tags: webserver
     - role: letsencrypt
       tags: cert
+    # role for Ansible 08 task
+    - role: vhost
+      tags: vhost
