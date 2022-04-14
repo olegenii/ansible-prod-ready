@@ -8,5 +8,7 @@
         name: "{{ tf_hostname }}"
   
   roles:
-    - nginx
-    - letsencrypt
+    - role: nginx
+      tags: nginx
+    - role: letsencrypt
+      tags: cert

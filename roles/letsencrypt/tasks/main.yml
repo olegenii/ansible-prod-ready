@@ -12,6 +12,7 @@
     group: root
     mode: u=rwx,g=x,o=x
 
+# reload nginx after installation
 - name: Flush handlers
   meta: flush_handlers
 
@@ -29,11 +30,12 @@
   ansible.builtin.template:
     src: "templates/vhost_ssl.conf.j2"
     dest: "/etc/nginx/sites-available/{{ domain_name }}.conf"
-  notify: Restart Nginx
+  notify: Reload Nginx
 
 - name: Flush handlers
   meta: flush_handlers
 
+# add cert renewal at cron
 - name: Add letsencrypt cronjob for cert renewal
   cron:
     name: letsencrypt_renewal
