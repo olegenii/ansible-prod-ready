@@ -32,5 +32,5 @@
     src: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
     dest: "/etc/nginx/sites-enabled/{{ item.value.name }}.conf"
     state: link
-  notify: Restart Nginx
+  notify: Reload Nginx
   loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
