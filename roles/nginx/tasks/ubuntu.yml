@@ -1,0 +1,19 @@
+- name: "Update apt cache and install {{ nginx_version }} on Ubuntu"
+  apt:
+    name: "{{ nginx_version }}"
+    state: present
+    update_cache: yes
+
+- name: Copy virtualhosts conf to server
+  ansible.builtin.template:
+    src: "templates/vhost.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
+
+- name: Enable new sites
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ item.value.name }}.conf"
+    state: link
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
+  notify: Reload Nginx

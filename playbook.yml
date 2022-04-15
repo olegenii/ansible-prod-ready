@@ -7,8 +7,11 @@
       1:
         name: "{{ tf_hostname }}"
   
+  vars_files:
+    - ["roles/nginx/vars/{{ ansible_facts['distribution']|lower }}.yml"]
+
   roles:
     - role: nginx
-      tags: webserver
+      tags: nginx
     - role: letsencrypt
       tags: cert

@@ -1,0 +1,15 @@
+- name: "Update apt cache and install epel-release and {{ nginx_version }} on CentOS"
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - epel-release
+    - "{{ nginx_version }}"
+
+- name: Copy virtualhosts conf to server
+  ansible.builtin.template:
+    src: "templates/vhost.conf.j2"
+    dest: "/etc/nginx/conf.d/{{ item.value.name }}.conf"
+  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
+  notify: Reload Nginx

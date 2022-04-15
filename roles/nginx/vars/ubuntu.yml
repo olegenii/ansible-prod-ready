@@ -1,0 +1,2 @@
+nginx_user: www-data
+nginx_version: "nginx=1.18.0-0ubuntu1.3"

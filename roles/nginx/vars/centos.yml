@@ -1,0 +1,2 @@
+nginx_user: nginx
+nginx_version: "nginx-1.20.1-9.el7.x86_64"

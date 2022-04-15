@@ -1,10 +1,18 @@
-# REBRAIN DevOps Task - ANSIBLE 05. Ansible role __nginx__
+# REBRAIN DevOps Task - ANSIBLE 07. Ansible cross-platform role.
 
 ## About The Project 
 Hi, this is a custom **Ansible** role for nginx webserver with some virtual hosts in.
 All infrastructure you want to use for that can be created by **Terraform** on [DigitalOcean](https://www.digitalocean.com/) provider. You have a few **jinja2** template here ready for use also.
 
-_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/142)_
+Additional tasks yaml were added to `/roles/nginx/tasks` folder with CentOS and Ubuntu OS support. Also OS-specific var files were added to `/roles/nginx/vars` with values. 
+
+In the main `playbook.yml` os-specific var_files section was added too:
+```yml
+  vars_files:
+    - ["roles/nginx/vars/{{ ansible_facts['distribution']|lower }}.yml"]
+```
+
+_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/144)_
 
 
 ### Built With
@@ -51,7 +59,7 @@ As a result Terraform create an `inventory.yml` that will need for Ansible later
 5. Edit `vhost.conf`, `nginx.conf`, `index.html` in `roles/nginx/template` folder using Jinja2 templates.
 ## Usage
 ```sh
-  ansible-playbook -i inventory.yml playbook.yml
+  ansible-playbook --tags nginx -i inventory.yml playbook.yml
 ```
 ## License
 
@@ -61,7 +69,7 @@ Distributed under the MIT License.
 
 Oleg Satalkin - [@olegen](https://t.me/olegen) - Oleg.Satalkin@gmail.com
 
-Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible05](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible05)
+Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible07](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible07)
 
 ## Acknowledgments
 * [REBRAIN](https://rebrainme.com/)
