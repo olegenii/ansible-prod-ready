@@ -12,3 +12,12 @@
       tags: nginx
     - role: letsencrypt
       tags: cert
+    - role: dubzland.nextcloud
+      tags: nextcloud
+  
+  tasks:
+    - name: Copy nextcloud virtualhost conf to server
+      ansible.builtin.template:
+        src: "files/vhost_nextcloud.conf.j2"
+        dest: "/etc/nginx/sites-available/{{ virtualhosts[1].name }}.conf"
+      notify: Reload Nginx

@@ -1,12 +1,17 @@
-# REBRAIN DevOps Task - ANSIBLE 06. LetsEncrypt certificate auto issuing.
+# REBRAIN DevOps Task - ANSIBLE 09. Using Galaxy roles.
 
 ## About The Project 
-Hi, this is a custom **Ansible** role for nginx webserver with some virtual hosts in.
+Hi, this is an **Ansible playbook** for [NextCloud](https://nextcloud.com/) Server distribution. I've selected [dubzland.nextcloud](https://galaxy.ansible.com/dubzland/nextcloud) role fom __Galaxy__ store for this task. 
+It based on some previous created roles also:
+- __nginx__ 
+- __certbot__
+
+Nginx virtual host conf file, 
+created using [NextCloud Docs](https://docs.nextcloud.com/server/latest/admin_manual/installation/nginx.html), was placed into `files/vhost_nextcloud.conf`.
+
 All infrastructure you want to use for that can be created by **Terraform** on [DigitalOcean](https://www.digitalocean.com/) provider. You have a few **jinja2** template here ready for use also.
 
-In this task we created a LE cert using certbot and did auto renewal using crontab
-
-_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/143)_
+_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/146)_
 
 
 ### Built With
@@ -26,7 +31,7 @@ Install all software you need:
 1. Clone the repo
    ```sh
    git clone https://gitlab.rebrainme.com/devops_users_repos/3732/ansible.git
-   git checkout ansible06-1
+   git checkout ansible09
    ```
 2. Create a `terraform.tfvars` file with your values from `terraform.tfvars.sample` in the same project folder.
 3. Create all infrastructure in Terraform:
@@ -35,15 +40,13 @@ Install all software you need:
    terraform plan
    terraform apply
    ```
-As a result Terraform create an `inventory.yml` that will need for Ansible later.
+  As a result Terraform create an `inventory.yml` with _VPS_ and _vars_ that will need for Ansible later.
 
-3. Edit `playbook.yml` with your sites for virtual hosts:
+3. Edit `playbook.yml` for setting non default virtual host name:
    ```yml
     virtualhosts:
       1:
-        name: "site1.com"
-      2:
-        name: "site2.com"
+        name: "{{ tf_hostname }}"
    ```
 4. Edit `main.yml` in `roles/nginx/vars` folder with your options:
     ```yml
@@ -51,11 +54,23 @@ As a result Terraform create an `inventory.yml` that will need for Ansible later
     document_root: /var/www
     port_num: 80
     ```
-5. Edit `vhost.conf`, `nginx.conf`, `index.html` in `roles/nginx/template` folder using Jinja2 templates.
 ## Usage
-```sh
+1. Pull `dubzland.nextcloud` role from Galaxy using `requirements.yml`:
+  ```sh
+  ansible-galaxy install -r files/requirements.yml --roles-path roles/
+  ```
+2. Edit `/roles/dubzland.nextcloud/defaults/main.yml` for setting main NextCloud vars.
+  ```yml
+  dubzland_nextcloud_root: "/var/www/cloud.oleg.devops.rebrain.srwx.net/html/"
+  dubzland_nextcloud_url: https://cloud.oleg.devops.rebrain.srwx.net
+  dubzland_nextcloud_trusted_domains:
+    - localhost
+    - cloud.oleg.devops.rebrain.srwx.net
+  ```
+3. Play!
+  ```sh
   ansible-playbook -i inventory.yml playbook.yml
-```
+  ```
 ## License
 
 Distributed under the MIT License.
@@ -64,7 +79,7 @@ Distributed under the MIT License.
 
 Oleg Satalkin - [@olegen](https://t.me/olegen) - Oleg.Satalkin@gmail.com
 
-Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible06-1](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible06-1)
+Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible09](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible09)
 
 ## Acknowledgments
 * [REBRAIN](https://rebrainme.com/)

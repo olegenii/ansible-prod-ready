@@ -1,0 +1,4 @@
+roles:
+  # Install a role from Ansible Galaxy.
+  - name: "dubzland.nextcloud"
+    version: 1.0.4
