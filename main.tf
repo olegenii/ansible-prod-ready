@@ -73,8 +73,8 @@ data "digitalocean_ssh_key" "ubuntu_ssh_rebrain" {
 # Create new vps Droplet in the fra1 region with tags and ssh keys
 resource "digitalocean_droplet" "vps" {
   count = var.do_vps_count
-  image  = "ubuntu-20-04-x64"
-  #image = "centos-7-x64"
+  #image  = "ubuntu-20-04-x64"
+  image = "centos-7-x64"
   name = "${var.vps_name}-${count.index}"
   region = "fra1"
   size   = "s-1vcpu-1gb"

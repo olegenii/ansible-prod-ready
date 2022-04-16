@@ -1,3 +1,6 @@
+- name: "Gather OS family variables"
+  include_vars: "{{ ansible_facts['distribution']|lower }}.yml"
+
 - name: "Install webserver on {{ ansible_facts['distribution'] }}"
   include_tasks: "{{ ansible_facts['distribution']|lower }}.yml"
 
@@ -9,13 +12,10 @@
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
-    path: "{{ document_root }}/{{ item.value.name }}/html"
+    path: "{{ document_root }}/{{ virtualhost }}/html"
     state: directory
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
 
 - name: Copy index.html to virtualhosts
   ansible.builtin.template:
     src: templates/index.html.j2
-    dest: "{{ document_root }}/{{ item.value.name }}/html/index.html"
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
-  
+    dest: "{{ document_root }}/{{ virtualhost }}/html/index.html"

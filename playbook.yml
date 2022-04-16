@@ -2,13 +2,8 @@
   become: yes
   
   vars:
-    # List of virtualhosts
-    virtualhosts:
-      1:
-        name: "{{ tf_hostname }}"
-  
-  vars_files:
-    - ["roles/nginx/vars/{{ ansible_facts['distribution']|lower }}.yml"]
+    # Virtualhost name
+    virtualhost: "{{ tf_virtualhostname }}"
 
   roles:
     - role: nginx

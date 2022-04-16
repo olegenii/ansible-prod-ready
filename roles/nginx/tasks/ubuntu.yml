@@ -4,16 +4,14 @@
     state: present
     update_cache: yes
 
-- name: Copy virtualhosts conf to server
+- name: Copy virtualhost conf to server
   ansible.builtin.template:
     src: "templates/vhost.conf.j2"
-    dest: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
+    dest: "/etc/nginx/sites-available/{{ virtualhost }}.conf"
 
 - name: Enable new sites
   ansible.builtin.file:
-    src: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
-    dest: "/etc/nginx/sites-enabled/{{ item.value.name }}.conf"
+    src: "/etc/nginx/sites-available/{{ virtualhost }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ virtualhost }}.conf"
     state: link
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
   notify: Reload Nginx

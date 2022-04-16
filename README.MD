@@ -32,6 +32,7 @@ Install all software you need:
 1. Clone the repo
    ```sh
    git clone https://gitlab.rebrainme.com/devops_users_repos/3732/ansible.git
+   git checkout ansible06-1
    ```
 2. Create a `terraform.tfvars` file with your values from `terraform.tfvars.sample` in the same project folder.
 3. Create all infrastructure in Terraform:
@@ -42,13 +43,9 @@ Install all software you need:
    ```
 As a result Terraform create an `inventory.yml` that will need for Ansible later.
 
-3. Edit `playbook.yml` with your sites for virtual hosts:
+3. Edit `playbook.yml` with your name for virtual host. Default value was set from Terraform-generated `inventory.yml`.
    ```yml
-    virtualhosts:
-      1:
-        name: "site1.com"
-      2:
-        name: "site2.com"
+    virtualhost: "{{ tf_virtualhostname }}"
    ```
 4. Edit `main.yml` in `roles/nginx/vars` folder with your options:
     ```yml
