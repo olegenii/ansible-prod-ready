@@ -8,6 +8,7 @@
   ansible.builtin.template:
     src: "templates/vhost.conf.j2"
     dest: "/etc/nginx/sites-available/{{ virtualhost }}.conf"
+  notify: Reload Nginx
 
 - name: Enable new sites
   ansible.builtin.file:
