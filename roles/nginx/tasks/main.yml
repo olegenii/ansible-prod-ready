@@ -3,34 +3,33 @@
     name: "{{ nginx_version }}"
     state: present
     update_cache: yes
+  notify: nginx systemd
 
 - name: Copy nginx.conf.j2 to server
   ansible.builtin.template:
     src: templates/nginx.conf.j2
     dest: /etc/nginx/nginx.conf
+  notify: Reload Nginx
 
 - name: Copy virtualhosts conf to server
   ansible.builtin.template:
     src: "templates/vhost.conf.j2"
-    dest: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
+    dest: "/etc/nginx/sites-available/{{ virtualhost }}.conf"
+  notify: Reload Nginx
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
-    path: "{{ document_root }}/{{ item.value.name }}/html"
+    path: "{{ document_root }}/{{ virtualhost }}/html"
     state: directory
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
 
 - name: Copy index.html to virtualhosts
   ansible.builtin.template:
     src: templates/index.html.j2
-    dest: "{{ document_root }}/{{ item.value.name }}/html/index.html"
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"
+    dest: "{{ document_root }}/{{ virtualhost }}/html/index.html"
 
 - name: Enable new sites
   ansible.builtin.file:
-    src: "/etc/nginx/sites-available/{{ item.value.name }}.conf"
-    dest: "/etc/nginx/sites-enabled/{{ item.value.name }}.conf"
+    src: "/etc/nginx/sites-available/{{ virtualhost }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ virtualhost }}.conf"
     state: link
   notify: Reload Nginx
-  loop: "{{ lookup('dict', virtualhosts, wantlist=True) }}"

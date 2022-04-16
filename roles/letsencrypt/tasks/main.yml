@@ -12,7 +12,7 @@
     group: root
     mode: u=rwx,g=x,o=x
 
-# reload nginx after installation
+# reload nginx after installation no matter what happend before
 - name: Flush handlers
   meta: flush_handlers
 

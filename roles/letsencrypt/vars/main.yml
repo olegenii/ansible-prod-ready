@@ -2,5 +2,5 @@ openssl_version: "openssl=1.1.1f-1ubuntu2.12"
 python3_version: "python3=3.8.2-0ubuntu2"
 certbot_version: "certbot=0.40.0-1ubuntu0.1"
 
-domain_name: "{{ tf_hostname }}"
-acme_email: "certificate-reminders@{{ tf_hostname }}"
+domain_name: "{{ tf_virtualhostname }}"
+acme_email: "certificate-reminders@{{ tf_virtualhostname }}"

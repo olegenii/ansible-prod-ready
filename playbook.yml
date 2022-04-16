@@ -2,10 +2,8 @@
   become: yes
   
   vars:
-    # List of virtualhosts
-    virtualhosts:
-      1:
-        name: "{{ tf_hostname }}"
+    # Virtualhost name
+    virtualhost: "{{ tf_virtualhostname }}"
   
   roles:
     - role: nginx

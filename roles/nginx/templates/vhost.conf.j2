@@ -1,14 +1,14 @@
 server {
   listen {{ port_num }};
-  server_name {{ item.value.name }} www.{{ item.value.name }};
-  root /var/www/{{ item.value.name }}/html;
+  server_name {{ virtualhost }} www.{{ virtualhost }};
+  root /var/www/{{ virtualhost }}/html;
   index index.html index.htm;
 
-  access_log /var/log/nginx/{{ item.value.name }}_access.log;
-  error_log /var/log/nginx/{{ item.value.name }}_error.log;
+  access_log /var/log/nginx/{{ virtualhost }}_access.log;
+  error_log /var/log/nginx/{{ virtualhost }}_error.log;
 
   location /.well-known/acme-challenge {
-    root /var/www/{{ item.value.name }}/html/letsencrypt;
+    root /var/www/{{ virtualhost }}/html/letsencrypt;
     try_files $uri $uri/ =404;
   }
 

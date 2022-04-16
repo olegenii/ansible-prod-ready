@@ -37,13 +37,9 @@ Install all software you need:
    ```
 As a result Terraform create an `inventory.yml` that will need for Ansible later.
 
-3. Edit `playbook.yml` with your sites for virtual hosts:
+3. Edit `playbook.yml` with your name for virtual host. Default value was set from Terraform-generated `inventory.yml`.
    ```yml
-    virtualhosts:
-      1:
-        name: "site1.com"
-      2:
-        name: "site2.com"
+    virtualhost: "{{ tf_virtualhostname }}"
    ```
 4. Edit `main.yml` in `roles/nginx/vars` folder with your options:
     ```yml
