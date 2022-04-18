@@ -6,6 +6,7 @@
   with_items:
     - epel-release
     - "{{ nginx_version }}"
+  notify: nginx systemd
 
 - name: Copy virtualhost conf to server
   ansible.builtin.template:

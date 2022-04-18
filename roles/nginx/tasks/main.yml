@@ -3,7 +3,6 @@
 
 - name: "Install webserver on {{ ansible_facts['distribution'] }}"
   include_tasks: "{{ ansible_facts['distribution']|lower }}.yml"
-  notify: nginx systemd
 
 - name: Copy nginx.conf.j2 to server
   ansible.builtin.template:

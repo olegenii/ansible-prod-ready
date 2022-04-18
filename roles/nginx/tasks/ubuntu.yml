@@ -3,6 +3,7 @@
     name: "{{ nginx_version }}"
     state: present
     update_cache: yes
+  notify: nginx systemd
 
 - name: Copy virtualhost conf to server
   ansible.builtin.template:
