@@ -1,12 +1,12 @@
-# REBRAIN DevOps Task - ANSIBLE 06. LetsEncrypt certificate auto issuing.
+# REBRAIN DevOps Task - ANSIBLE 10. Ansibl Vault.
 
 ## About The Project 
-Hi, this is a custom **Ansible** role for nginx webserver with some virtual hosts in.
+Hi, this is a custom **Ansible** playbook with nginx webserver role and some tasks for ssl certificate copying/private key generating. The folder `files` contains encrypted SSL-certificate for `olegen.devops.rebrain.srwx.net` website.
+All vars in `playbook.yml` are also encrypted.
+
 All infrastructure you want to use for that can be created by **Terraform** on [DigitalOcean](https://www.digitalocean.com/) provider. You have a few **jinja2** template here ready for use also.
 
-In this task we created a LE cert using certbot and did auto renewal using crontab
-
-_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/143)_
+_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/147)_
 
 
 ### Built With
@@ -26,7 +26,7 @@ Install all software you need:
 1. Clone the repo
    ```sh
    git clone https://gitlab.rebrainme.com/devops_users_repos/3732/ansible.git
-   git checkout ansible06-1
+   git checkout ansible10
    ```
 2. Create a `terraform.tfvars` file with your values from `terraform.tfvars.sample` in the same project folder.
 3. Create all infrastructure in Terraform:
@@ -35,22 +35,10 @@ Install all software you need:
    terraform plan
    terraform apply
    ```
-As a result Terraform create an `inventory.yml` that will need for Ansible later.
-
-3. Edit `playbook.yml` with your name for virtual host. Default value was set from Terraform-generated `inventory.yml`.
-   ```yml
-    virtualhost: "{{ tf_virtualhostname }}"
-   ```
-4. Edit `main.yml` in `roles/nginx/vars` folder with your options:
-    ```yml
-    server_name: "{{ inventory_hostname }}"
-    document_root: /var/www
-    port_num: 80
-    ```
-5. Edit `vhost.conf`, `nginx.conf`, `index.html` in `roles/nginx/template` folder using Jinja2 templates.
+4. Create a file `password` in project folder. 
 ## Usage
 ```sh
-  ansible-playbook -i inventory.yml playbook.yml
+ansible-playbook -i inventory.yml --skip-tags letsencrypt playbook.yml --vault-id @password
 ```
 ## License
 
@@ -60,7 +48,7 @@ Distributed under the MIT License.
 
 Oleg Satalkin - [@olegen](https://t.me/olegen) - Oleg.Satalkin@gmail.com
 
-Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible06-1](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible06-1)
+Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible10](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible10)
 
 ## Acknowledgments
 * [REBRAIN](https://rebrainme.com/)
