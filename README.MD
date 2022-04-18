@@ -1,4 +1,4 @@
-# REBRAIN DevOps Task - ANSIBLE 10. Ansibl Vault.
+# REBRAIN DevOps Task - ANSIBLE 10. Ansible Vault.
 
 ## About The Project 
 Hi, this is a custom **Ansible** playbook with nginx webserver role and some tasks for ssl certificate copying/private key generating. The folder `files` contains encrypted SSL-certificate for `olegen.devops.rebrain.srwx.net` website.
