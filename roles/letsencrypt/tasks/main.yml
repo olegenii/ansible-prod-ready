@@ -17,14 +17,15 @@
   meta: flush_handlers
 
 - name: Create letsencrypt certificate
-  shell: "certbot certonly -n --webroot -w /var/www/{{ domain_name }}/html/letsencrypt -m {{ acme_email }} --agree-tos -d {{ domain_name }} -d www.{{ domain_name }}"
+  shell: |
+    "certbot certonly -n --webroot -w /var/www/{{ domain_name }}/html/letsencrypt -m {{ acme_email }} --agree-tos -d {{ domain_name }} -d www.{{ domain_name }}"
   args:
     creates: "/etc/letsencrypt/live/{{ domain_name }}"
 
-- name: Generate dhparams
-  shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
-  args:
-    creates: /etc/nginx/dhparams.pem    
+- name: Generate DH Parameters with a different size (2048 bits)
+  community.crypto.openssl_dhparam:
+    path: /etc/nginx/dhparams.pem
+    size: 2048
 
 - name: Copy ssl virtualhost conf to server
   ansible.builtin.template:
@@ -40,4 +41,6 @@
   cron:
     name: letsencrypt_renewal
     special_time: weekly
-    job: "certbot --renew-by-default certonly -n --webroot -w /etc/letsencrypt -m {{ acme_email }} --agree-tos -d {{ domain_name }} -d www.{{ domain_name }} && service nginx reload"
+    job: |
+      "certbot --renew-by-default certonly -n --webroot -w /etc/letsencrypt -m {{ acme_email }} --agree-tos -d {{ domain_name }} -d www.{{ domain_name }}
+      && service nginx reload"

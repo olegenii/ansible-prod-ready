@@ -1,0 +1,24 @@
+201 Trailing whitespace
+playbook.yml:3
+  
+
+305 Use shell only when shell functionality is required
+/home/ubuntu/rebrain/ansible/roles/letsencrypt/tasks/main.yml:19
+Task/Handler: Create letsencrypt certificate
+
+204 Lines should be no longer than 160 chars
+/home/ubuntu/rebrain/ansible/roles/letsencrypt/tasks/main.yml:20
+  shell: "certbot certonly -n --webroot -w /var/www/{{ domain_name }}/html/letsencrypt -m {{ acme_email }} --agree-tos -d {{ domain_name }} -d www.{{ domain_name }}"
+
+305 Use shell only when shell functionality is required
+/home/ubuntu/rebrain/ansible/roles/letsencrypt/tasks/main.yml:24
+Task/Handler: Generate dhparams
+
+201 Trailing whitespace
+/home/ubuntu/rebrain/ansible/roles/letsencrypt/tasks/main.yml:27
+    creates: /etc/nginx/dhparams.pem    
+
+204 Lines should be no longer than 160 chars
+/home/ubuntu/rebrain/ansible/roles/letsencrypt/tasks/main.yml:43
+    job: "certbot --renew-by-default certonly -n --webroot -w /etc/letsencrypt -m {{ acme_email }} --agree-tos -d {{ domain_name }} -d www.{{ domain_name }} && service nginx reload"
+
