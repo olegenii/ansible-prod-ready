@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 3.0"
     }
+    null = {
+      source = "hashicorp/null"
+      version = "3.1.1"
+    }
   }
 }
 
@@ -31,39 +35,12 @@ data "aws_route53_zone" "selected" {
 
 # Create DNS record
 resource "aws_route53_record" "www" {
-  count = var.do_vps_count
+  for_each = digitalocean_droplet.vps
   zone_id = data.aws_route53_zone.selected.zone_id
-  name    = digitalocean_droplet.vps[count.index].name
+  name = each.value.name
   type    = "A"
   ttl     = "300"
-  records = [digitalocean_droplet.vps[count.index].ipv4_address]
-}
-
-# Create DNS record for vhost
-# resource "aws_route53_record" "vhost" {
-#   zone_id = data.aws_route53_zone.selected.zone_id
-#   name    = var.aws_route53_record_name
-#   type    = "A"
-#   ttl     = "300"
-#   records = [digitalocean_droplet.vps[0].ipv4_address]
-# }
-
-# resource "aws_route53_record" "www_vhost" {
-#   zone_id = data.aws_route53_zone.selected.zone_id
-#   name    = "www.${var.aws_route53_record_name}"
-#   type    = "A"
-#   ttl     = "300"
-#   records = [digitalocean_droplet.vps[0].ipv4_address]
-# }
-
-# Create DNS record for vhost and www.vhost
-resource "aws_route53_record" "vhost" {
-  for_each = toset( [var.aws_route53_record_name, "www.${var.aws_route53_record_name}"] )
-  zone_id = data.aws_route53_zone.selected.zone_id
-  name    = each.key
-  type    = "A"
-  ttl     = "300"
-  records = [digitalocean_droplet.vps[0].ipv4_address]
+  records = [each.value.ipv4_address]
 }
 
 # Create task_name tag
@@ -89,9 +66,9 @@ data "digitalocean_ssh_key" "ubuntu_ssh_rebrain" {
 
 # Create new vps Droplet in the fra1 region with tags and ssh keys
 resource "digitalocean_droplet" "vps" {
-  count = var.do_vps_count
+  for_each = toset(var.vps_list)
   image  = "ubuntu-20-04-x64"
-  name = "${var.vps_name}-${count.index}"
+  name = "${each.key}"
   region = "fra1"
   size   = "s-1vcpu-1gb"
   tags   = [digitalocean_tag.task_name.id, digitalocean_tag.user_email.id]
@@ -101,5 +78,17 @@ resource "digitalocean_droplet" "vps" {
 # Create an inventory using template
 resource "local_file" "vps" {
   filename = "${path.module}/${var.file_out}"
-  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, vps_list = digitalocean_droplet.vps, hostname=var.aws_route53_record_name})
+  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, vps_list = digitalocean_droplet.vps, backend=var.vps_list[1]})
+}
+
+# Create a null resource for ansible call
+resource "null_resource" "vps_ready" {
+
+  provisioner "local-exec" {
+    command = "ansible-playbook -i inventory.yml --tags nginx,lb playbook.yml"
+  }
+  # wait till inventory.yml get ready
+  depends_on = [
+    local_file.vps,
+  ]
 }

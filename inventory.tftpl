@@ -1,9 +1,20 @@
-webserver:
-  hosts:
+all:
+  children:
 %{ for vps in vps_list ~}
-    ${vps.name}.${domain}:
-      ansible_host: ${vps.ipv4_address}
-      ansible_user: root
+%{ if length(regexall("web",vps.name)) > 0 ~}  
+    webserver:
+      hosts:  
+        ${vps.name}.${domain}:
+          ansible_host: ${vps.ipv4_address}
+          ansible_user: root
+%{ endif ~}
+%{ if length(regexall("lb",vps.name)) > 0 ~}
+    loadbalancer:
+      hosts:  
+        ${vps.name}.${domain}:
+          ansible_host: ${vps.ipv4_address}
+          ansible_user: root
+%{ endif ~}
 %{ endfor ~}
   vars:
-    tf_virtualhostname: ${hostname}.${domain}
+    tf_backend: ${backend}.${domain}

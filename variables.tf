@@ -23,9 +23,12 @@ variable "aws_route53_zone" {}
 variable "aws_route53_record_name" {}
 
 # # Add DO droplet count
-variable "do_vps_count" {}
-variable "vps_name" {}
+# variable "do_vps_count" {}
+# variable "vps_name" {}
 
 # Add file and template names
 variable "file_out" {}
 variable "file_in" {}
+
+# Add server name list
+variable "vps_list" {}

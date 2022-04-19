@@ -1,11 +1,13 @@
-# REBRAIN DevOps Task - ANSIBLE 11. Ansible-lint.
+# REBRAIN DevOps Task - ANSIBLE 12. Terraform calling Ansible.
 
 ## About The Project 
-Hi, this is a custom **Ansible** playbook with __nginx__ webserver and __letsencrypt__ certificate issuing roles after applying fixes from `ansible-lint` command. You can check some errors in `lint_before_output` file and no messages after got it fixed in `lint_after_output`.
+Hi, this is a Terraform `main.tf` file with __local-exec__ provisioner calling ansible `playbook.yml`.
+
+Terraform `main.tf` file creates 2 VPS and export `playbook.yml` ansible inventory file and then **Ansible** playbook with __nginx__ static webserver and __nginx__ load balancer roles comes into play.
 
 All infrastructure you want to use for that can be created by **Terraform** on [DigitalOcean](https://www.digitalocean.com/) provider. You have a few **jinja2** template here ready for use also.
 
-_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/148)_
+_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/149)_
 
 
 ### Built With
@@ -25,11 +27,13 @@ Install all software you need:
 1. Clone the repo
    ```sh
    git clone https://gitlab.rebrainme.com/devops_users_repos/3732/ansible.git
-   git checkout ansible11
+   git checkout ansible12
    ```
 ## Usage
 ```sh
-ansible-lint playbook.yml
+terraform init
+terraform plan
+terraform apply
 ```
 ## License
 
@@ -39,7 +43,7 @@ Distributed under the MIT License.
 
 Oleg Satalkin - [@olegen](https://t.me/olegen) - Oleg.Satalkin@gmail.com
 
-Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible11](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible11)
+Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible12](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible12)
 
 ## Acknowledgments
 * [REBRAIN](https://rebrainme.com/)

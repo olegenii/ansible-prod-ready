@@ -1,53 +1,20 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Wait 60 seconds till all VPS are ready
+      wait_for_connection:
+      timeout: 60
+
 - hosts: webserver
   become: yes
-
-  vars:
-    virtualhost: !vault |
-          $ANSIBLE_VAULT;1.2;AES256;var
-          62346235636431646339343666643761316232656266623565323732316130373464333338393635
-          6466396636623466386264336561343564396334346263360a306533653430343564316531666431
-          37323532613263616635303138666664626265356439396431633936353764383838636133346466
-          3431396335323961310a356662666663306334313237373466646531303135313835326630653433
-          39623330313133666233393063353164313331306435356434386331343231363263
-    account_key_dir: !vault |
-          $ANSIBLE_VAULT;1.2;AES256;var
-          39623266323865623838323730366361323231323436666365313265643861623961323966663561
-          3063343462613137313835616532323330643134386261380a353164623638343762303535396336
-          37366334663237393864386635646433373330353832646436353336393131333339373833393164
-          3639363438356264610a366230346461306532636364653961636263633261306264363465663836
-          34303039356432626562636165376637643239653731366236653866623462666533
-
   roles:
     - role: nginx
       tags: nginx
     - role: letsencrypt
       tags: cert
 
-  tasks:
-    - name: Create a ssl directory if it does not exist
-      ansible.builtin.file:
-        path: "/etc/ssl"
-        state: directory
-
-    - name: Generate an OpenSSL account key with the default values (4096 bits, RSA)
-      community.crypto.openssl_privatekey:
-        path: "{{ account_key_dir }}"
-
-    - name: Copy site ssl cert and key to server
-      copy:
-        src: "files/{{ item }}"
-        dest: "/etc/ssl"
-        mode: preserve
-      with_items:
-        - "fullchain.pem"
-        - "privkey.pem"
-
-    - name: Copy ssl conf to server
-      template:
-        src: "vhost_ssl.conf.j2"
-        dest: "/etc/nginx/sites-available/{{ virtualhost }}.conf"
-
-    - name: Reload Nginx
-      ansible.builtin.service:
-        name: nginx
-        state: reloaded
+- hosts: loadbalancer
+  become: yes
+  roles:
+    - role: loadbalance
+      tags: lb
