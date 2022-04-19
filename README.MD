@@ -1,12 +1,11 @@
-# REBRAIN DevOps Task - ANSIBLE 10. Ansible Vault.
+# REBRAIN DevOps Task - ANSIBLE 11. Ansible-lint.
 
 ## About The Project 
-Hi, this is a custom **Ansible** playbook with nginx webserver role and some tasks for ssl certificate copying/private key generating. The folder `files` contains encrypted SSL-certificate for `olegen.devops.rebrain.srwx.net` website.
-All vars in `playbook.yml` are also encrypted.
+Hi, this is a custom **Ansible** playbook with __nginx__ webserver and __letsencrypt__ certificate issuing roles after applying fixes from `ansible-lint` command. You can check some errors in `lint_before_output` file and no messages after got it fixed in `lint_after_output`.
 
 All infrastructure you want to use for that can be created by **Terraform** on [DigitalOcean](https://www.digitalocean.com/) provider. You have a few **jinja2** template here ready for use also.
 
-_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/147)_
+_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/148)_
 
 
 ### Built With
@@ -26,19 +25,11 @@ Install all software you need:
 1. Clone the repo
    ```sh
    git clone https://gitlab.rebrainme.com/devops_users_repos/3732/ansible.git
-   git checkout ansible10
+   git checkout ansible11
    ```
-2. Create a `terraform.tfvars` file with your values from `terraform.tfvars.sample` in the same project folder.
-3. Create all infrastructure in Terraform:
-   ```sh
-   terraform init
-   terraform plan
-   terraform apply
-   ```
-4. Create a file `password` in project folder. 
 ## Usage
 ```sh
-ansible-playbook -i inventory.yml --skip-tags letsencrypt playbook.yml --vault-id @password
+ansible-lint playbook.yml
 ```
 ## License
 
@@ -48,7 +39,7 @@ Distributed under the MIT License.
 
 Oleg Satalkin - [@olegen](https://t.me/olegen) - Oleg.Satalkin@gmail.com
 
-Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible10](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible10)
+Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible11](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible11)
 
 ## Acknowledgments
 * [REBRAIN](https://rebrainme.com/)
