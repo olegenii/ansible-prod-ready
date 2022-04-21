@@ -31,4 +31,6 @@ variable "file_out" {}
 variable "file_in" {}
 
 # Add server name list
+# Add server name list like *name-type*
+# web - for webservers, lb - for load balancer
 variable "vps_list" {}

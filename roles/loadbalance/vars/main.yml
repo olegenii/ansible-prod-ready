@@ -3,4 +3,5 @@ nginx_version: "nginx=1.18.0-0ubuntu1.3"
 document_root: /var/www
 port_num: 80
 virtualhost: "{{ inventory_hostname }}"
-backend: "{{ tf_backend }}"
+backends: "{{ tf_web }}"
+lb: "{{ tf_lb }}"

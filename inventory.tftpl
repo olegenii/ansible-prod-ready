@@ -5,18 +5,19 @@ all:
 %{ for vps in vps_list ~}
 %{ if length(regexall("web",vps.name)) > 0 ~}  
         ${vps.name}.${domain}:
-          ansible_host: ${vps.network_interface.0.access_config.0.nat_ip}
-          ansible_user: ${gcp_user}
+          ansible_host: ${vps.ipv4_address}
+          ansible_user: ${vps_user}
 %{ endif ~}
 %{ endfor ~}
-%{ for vps in vps_list ~}
     loadbalancer:
       hosts:
+%{ for vps in vps_list ~}
 %{ if length(regexall("lb",vps.name)) > 0 ~}
         ${vps.name}.${domain}:
-          ansible_host: ${vps.network_interface.0.access_config.0.nat_ip}
-          ansible_user: ${gcp_user}
+          ansible_host: ${vps.ipv4_address}
+          ansible_user: ${vps_user}
 %{ endif ~}
 %{ endfor ~}
   vars:
-    tf_backend: ${backend}.${domain}
+    tf_lb: ${lb}.${domain}
+    tf_web: [%{ for b in backends ~}${b}.${domain},%{ endfor ~}]

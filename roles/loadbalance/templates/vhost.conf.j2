@@ -1,5 +1,7 @@
 upstream backend {
-    server {{ backend }}:80;
+{% for backend in backends %}
+  server {{ backend }}:80;
+{% endfor %}
 }
 server {
   listen {{ port_num }};

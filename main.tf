@@ -33,8 +33,8 @@ data "aws_route53_zone" "selected" {
   name = var.aws_route53_zone
 }
 
-# Create DNS record
-resource "aws_route53_record" "www" {
+# Create DNS record for all VPS
+resource "aws_route53_record" "vps" {
   for_each = digitalocean_droplet.vps
   zone_id = data.aws_route53_zone.selected.zone_id
   name = each.value.name
@@ -42,6 +42,17 @@ resource "aws_route53_record" "www" {
   ttl     = "300"
   records = [each.value.ipv4_address]
 }
+
+# Create DNS record for LB
+resource "aws_route53_record" "lb" {
+  for_each = toset( [var.aws_route53_record_name, "www.${var.aws_route53_record_name}"] )
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = each.key
+  type    = "A"
+  ttl     = "300"
+  records = [for vps in digitalocean_droplet.vps : vps.ipv4_address if length(regexall("lb",vps.name)) > 0]
+}
+
 
 # Create task_name tag
 resource "digitalocean_tag" "task_name" {
@@ -78,7 +89,7 @@ resource "digitalocean_droplet" "vps" {
 # Create an inventory using template
 resource "local_file" "vps" {
   filename = "${path.module}/${var.file_out}"
-  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, vps_list = digitalocean_droplet.vps, backends=[for vps in var.vps_list : vps if regexall("lb",vps.name) > 0]})
+  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, vps_list = digitalocean_droplet.vps, vps_user=var.vps_user_name, lb=local.lb[0], backends=local.backends})
 }
 
 # Create a null resource for ansible call
@@ -91,4 +102,11 @@ resource "null_resource" "vps_ready" {
   depends_on = [
     local_file.vps,
   ]
+}
+
+locals {
+  # list of backend webservers for ansible inventory
+  backends = [for s in var.vps_list : s if length(regexall("web",s)) > 0]
+  # list of lb, but we take first =)
+  lb = [for s in var.vps_list : s if length(regexall("lb",s)) > 0]
 }

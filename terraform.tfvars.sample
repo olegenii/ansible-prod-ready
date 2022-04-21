@@ -27,6 +27,6 @@ file_out = "your_filename.txt"
 file_in = "your_template.tftpl"
 
 # Add server name list
-# Add prefix lb for loadbalancer and
-# web for webserver
+# Add server name list like *name-type*
+# web - for webservers, lb - for load balancer
 vps_list = ["lb-vps1", "web-vps2"] 
