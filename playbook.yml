@@ -3,7 +3,7 @@
   tasks:
     - name: Wait 60 seconds till all VPS are ready
       wait_for_connection:
-      timeout: 60
+      timeout: 120
 
 - hosts: webserver
   become: yes

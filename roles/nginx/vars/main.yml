@@ -1,5 +1,4 @@
-#server_name: "{{ inventory_hostname }}"
-nginx_version: "nginx=1.18.0-0ubuntu1.3"
+nginx_version: "nginx"
 document_root: /var/www
 port_num: 80
 virtualhost: "{{ inventory_hostname }}"

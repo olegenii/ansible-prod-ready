@@ -1,13 +1,13 @@
-# REBRAIN DevOps Task - ANSIBLE 12. Terraform calling Ansible.
+# REBRAIN DevOps Task - ANSIBLE 13. Production ready.
 
 ## About The Project 
-Hi, this is a Terraform `main.tf` file with __local-exec__ provisioner calling ansible `playbook.yml`.
+Hi, this is a Terraform `main.tf` file with __local-exec__ provisioner calling ansible `playbook.yml`. 
 
-Terraform `main.tf` file creates 2 VPS and export `playbook.yml` ansible inventory file and then **Ansible** playbook with __nginx__ static webserver and __nginx__ load balancer roles comes into play.
+Terraform `main.tf` file creates and setup GCP Load Balancer and export `playbook.yml` ansible inventory file and then **Ansible** playbook with 2 __nginx__ static webserver roles comes into play.
 
-All infrastructure you want to use for that can be created by **Terraform** on [DigitalOcean](https://www.digitalocean.com/) provider. You have a few **jinja2** template here ready for use also.
+All infrastructure you want to use for that can be created by **Terraform** on [Google Cloud](https://www.cloud.google.com/) provider. You have a few **jinja2** template here ready for use also.
 
-_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/149)_
+_Full task descrption represent at [REBRAIN site](https://lk.rebrainme.com/devops/task/150)_
 
 
 ### Built With
@@ -27,7 +27,7 @@ Install all software you need:
 1. Clone the repo
    ```sh
    git clone https://gitlab.rebrainme.com/devops_users_repos/3732/ansible.git
-   git checkout ansible12
+   git checkout ansible13
    ```
 ## Usage
 ```sh
@@ -43,7 +43,7 @@ Distributed under the MIT License.
 
 Oleg Satalkin - [@olegen](https://t.me/olegen) - Oleg.Satalkin@gmail.com
 
-Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible12](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible12)
+Project Link: [https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible13](https://gitlab.rebrainme.com/devops_users_repos/3732/ansible/-/tree/ansible13)
 
 ## Acknowledgments
 * [REBRAIN](https://rebrainme.com/)
