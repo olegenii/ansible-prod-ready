@@ -5,3 +5,4 @@ port_num: 80
 virtualhost: "{{ inventory_hostname }}"
 backends: "{{ tf_web }}"
 lb: "{{ tf_lb }}"
+short_lb: "{{ tf_short_lb }}"

@@ -1,20 +1,20 @@
 - hosts: all
   become: yes
   tasks:
-    - name: Wait 60 seconds till all VPS are ready
+    - name: Wait 100 seconds till all VPS are ready
       wait_for_connection:
-      timeout: 60
+      timeout: 100
 
 - hosts: webserver
   become: yes
   roles:
     - role: nginx
       tags: nginx
-    - role: letsencrypt
-      tags: cert
 
 - hosts: loadbalancer
   become: yes
   roles:
     - role: loadbalance
       tags: lb
+    - role: letsencrypt
+      tags: cert

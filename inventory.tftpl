@@ -21,3 +21,4 @@ all:
   vars:
     tf_lb: ${lb}.${domain}
     tf_web: [%{ for b in backends ~}${b}.${domain},%{ endfor ~}]
+    tf_short_lb: ${short_lb}.${domain}

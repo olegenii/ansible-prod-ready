@@ -5,7 +5,7 @@ upstream backend {
 }
 server {
   listen {{ port_num }};
-  server_name {{ virtualhost }} www.{{ virtualhost }};
+  server_name {{ short_lb }} www.{{ short_lb }} {{ virtualhost }} www.{{ virtualhost }};
   root /var/www/{{ virtualhost }}/html;
   index index.html index.htm;
 

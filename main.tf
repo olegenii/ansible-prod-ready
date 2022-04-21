@@ -43,7 +43,7 @@ resource "aws_route53_record" "vps" {
   records = [each.value.ipv4_address]
 }
 
-# Create DNS record for LB
+# Create special DNS record for LB
 resource "aws_route53_record" "lb" {
   for_each = toset( [var.aws_route53_record_name, "www.${var.aws_route53_record_name}"] )
   zone_id = data.aws_route53_zone.selected.zone_id
@@ -89,7 +89,7 @@ resource "digitalocean_droplet" "vps" {
 # Create an inventory using template
 resource "local_file" "vps" {
   filename = "${path.module}/${var.file_out}"
-  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, vps_list = digitalocean_droplet.vps, vps_user=var.vps_user_name, lb=local.lb[0], backends=local.backends})
+  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, short_lb=var.aws_route53_record_name, vps_list = digitalocean_droplet.vps, vps_user=var.vps_user_name, lb=local.lb[0], backends=local.backends})
 }
 
 # Create a null resource for ansible call
