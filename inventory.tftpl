@@ -1,19 +1,21 @@
 all:
   children:
+    webserver:
+      hosts:
 %{ for vps in vps_list ~}
 %{ if length(regexall("web",vps.name)) > 0 ~}  
-    webserver:
-      hosts:  
         ${vps.name}.${domain}:
-          ansible_host: ${vps.ipv4_address}
-          ansible_user: root
+          ansible_host: ${vps.network_interface.0.access_config.0.nat_ip}
+          ansible_user: ${gcp_user}
 %{ endif ~}
-%{ if length(regexall("lb",vps.name)) > 0 ~}
+%{ endfor ~}
+%{ for vps in vps_list ~}
     loadbalancer:
-      hosts:  
+      hosts:
+%{ if length(regexall("lb",vps.name)) > 0 ~}
         ${vps.name}.${domain}:
-          ansible_host: ${vps.ipv4_address}
-          ansible_user: root
+          ansible_host: ${vps.network_interface.0.access_config.0.nat_ip}
+          ansible_user: ${gcp_user}
 %{ endif ~}
 %{ endfor ~}
   vars:

@@ -68,7 +68,7 @@ data "digitalocean_ssh_key" "ubuntu_ssh_rebrain" {
 resource "digitalocean_droplet" "vps" {
   for_each = toset(var.vps_list)
   image  = "ubuntu-20-04-x64"
-  name = "${each.key}"
+  name = each.key
   region = "fra1"
   size   = "s-1vcpu-1gb"
   tags   = [digitalocean_tag.task_name.id, digitalocean_tag.user_email.id]
@@ -78,7 +78,7 @@ resource "digitalocean_droplet" "vps" {
 # Create an inventory using template
 resource "local_file" "vps" {
   filename = "${path.module}/${var.file_out}"
-  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, vps_list = digitalocean_droplet.vps, backend=var.vps_list[1]})
+  content  = templatefile("${path.module}/${var.file_in}", {domain = var.aws_route53_zone, vps_list = digitalocean_droplet.vps, backends=[for vps in var.vps_list : vps if regexall("lb",vps.name) > 0]})
 }
 
 # Create a null resource for ansible call
