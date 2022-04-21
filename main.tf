@@ -80,11 +80,6 @@ resource "google_compute_instance_group" "backend" {
     name = "http"
     port = "80"
   }
-
-  named_port {
-    name = "https"
-    port = "8443"
-  }
 }
 
 # Create a backend service with instance group as http backend
